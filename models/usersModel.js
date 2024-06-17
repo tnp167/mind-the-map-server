@@ -56,6 +56,14 @@ const createUser = async (userData) => {
   }
 };
 
+const getUserByEmail = async (userEmail) => {
+  try {
+    return await knex("users").where({ email: userEmail }).first();
+  } catch (error) {
+    throw error;
+  }
+};
+
 const getUserById = async (userId) => {
   try {
     const user = await knex("users").where({ id: userId }).first();
@@ -81,4 +89,5 @@ module.exports = {
   createUser,
   getUserById,
   updateUser,
+  getUserByEmail,
 };

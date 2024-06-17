@@ -4,6 +4,6 @@ module.exports = [
     first_name: "John",
     last_name: "Doe",
     email: "johndoe@hotmail.com",
-    password: "aA12345!",
+    password: "hashed_password_here",
   },
 ];
