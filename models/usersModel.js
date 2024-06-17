@@ -5,7 +5,7 @@ const createUser = async (userData) => {
     const insertedUser = await knex("users").insert(userData).returning("*");
     return insertedUser[0];
   } catch (error) {
-    if (error.code === "23505" || error.detail.includes("already exists")) {
+    if (error.code === "23505") {
       console.error("Duplicate email:", userData.email);
       throw new Error("Email address already exists");
     } else {
