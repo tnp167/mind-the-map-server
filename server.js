@@ -4,7 +4,7 @@ const cors = require("cors");
 const userRoutes = require("./routes/userRoutes");
 
 require("dotenv").config();
-const PORT = process.env.PORT || 5432;
+const PORT = process.env.PORT || 8080;
 
 const cors_origin = process.env.CORS_ORIGIN;
 
