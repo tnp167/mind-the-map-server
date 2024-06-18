@@ -1,7 +1,20 @@
 const knexConfig = require("../knexfile").test;
 const knex = require("knex")(knexConfig);
-
+const request = require("supertest");
 const users = require("../models/usersModel");
+const express = require("express");
+const app = express();
+const jwt = require("jsonwebtoken");
+const authentication = require("../middleware/auth");
+
+app.get("/user", authentication, async (req, res) => {
+  try {
+    res.status(200).json({ user: req.user });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 describe("Users Table", () => {
   beforeAll(async () => {
     await knex.migrate.latest();
@@ -69,5 +82,20 @@ describe("Users Table", () => {
     const updatedUser = await users.updateUser(newUser.id, updatedUserData);
     expect(updatedUser).toBeDefined();
     expect(updatedUser.email).toBe(updatedUserData.email);
+  });
+
+  it("should return a valid token", async () => {
+    const payload = { id: 1, email: "test@example.com" };
+    const token = jwt.sign(payload, process.env.JWT, {
+      expiresIn: "1h",
+    });
+
+    const response = await request(app)
+      .get("/user/")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200);
+
+    expect(response.body.user.id).toBe(payload.id);
+    expect(response.body.user.email).toBe(payload.email);
   });
 });
