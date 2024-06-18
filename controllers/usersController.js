@@ -2,6 +2,7 @@ const users = require("../models/usersModel");
 const router = require("express").Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const authentication = require("../middleware/auth");
 
 router.post("/register", async (req, res) => {
   try {
@@ -51,6 +52,14 @@ router.post("/login", async (req, res) => {
     });
 
     res.status(200).json({ token });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("/", authentication, async (req, res) => {
+  try {
+    res.status(200).json({ user: req.user });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
