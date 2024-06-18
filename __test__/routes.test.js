@@ -14,8 +14,8 @@ describe("Routes Table", () => {
   };
 
   const userData = {
-    first_name: "testfirstname",
-    last_name: "testlastname",
+    firstname: "testfirstname",
+    lastname: "testlastname",
     password: "testpassword",
     email: "testuser@example.com",
   };

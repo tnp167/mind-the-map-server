@@ -14,8 +14,8 @@ describe("Users Table", () => {
 
   it("should insert a new user", async () => {
     const testUserData = {
-      first_name: "testfirstname",
-      last_name: "testlastname",
+      firstname: "testfirstname",
+      lastname: "testlastname",
       password: "testpassword",
       email: "testuser@example.com",
     };
@@ -23,15 +23,29 @@ describe("Users Table", () => {
     const insertedUser = await users.createUser(testUserData);
 
     expect(insertedUser).toBeDefined();
-    expect(insertedUser.first_name).toBe(testUserData.first_name);
-    expect(insertedUser.last_name).toBe(testUserData.last_name);
+    expect(insertedUser.first_name).toBe(testUserData.firstname);
+    expect(insertedUser.last_name).toBe(testUserData.lastname);
+    expect(insertedUser.email).toBe(testUserData.email);
+  });
+
+  it("should retrieve a user by email", async () => {
+    const testUserData = {
+      firstname: "testfirstname",
+      lastname: "testlastname1",
+      password: "testpassword",
+      email: "testuser0@example.com",
+    };
+
+    const newUser = await users.createUser(testUserData);
+    const insertedUser = await users.getUserByEmail(newUser.email);
+    expect(insertedUser).toBeDefined();
     expect(insertedUser.email).toBe(testUserData.email);
   });
 
   it("should retrieve a user by ID", async () => {
     const testUserData = {
-      first_name: "testfirstname",
-      last_name: "testlastname",
+      firstname: "testfirstname",
+      lastname: "testlastname",
       password: "testpassword",
       email: "testuser1@example.com",
     };
@@ -43,8 +57,8 @@ describe("Users Table", () => {
 
   it("should update a user", async () => {
     let testUserData = {
-      first_name: "testfirstname",
-      last_name: "testlastname",
+      firstname: "testfirstname",
+      lastname: "testlastname",
       password: "testpassword",
       email: "testuser2@example.com",
     };
