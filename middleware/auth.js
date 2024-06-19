@@ -10,9 +10,7 @@ const authentication = (req, res, next) => {
 
   jwt.verify(token, jwtKey, (error, decoded) => {
     if (error) {
-      return res
-        .status(403)
-        .json({ error: "User does not have access rights to the content" });
+      return res.status(403).json({ error: "Access is denied" });
     }
 
     req.user = decoded;
