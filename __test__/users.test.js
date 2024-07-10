@@ -85,17 +85,24 @@ describe("Users Table", () => {
   });
 
   it("should return a valid token", async () => {
-    const payload = { id: 1, email: "test@example.com" };
+    const payload = {
+      id: 1,
+      email: "test@example.com",
+      firstname: "testFirst",
+      lastname: "testLast",
+    };
     const token = jwt.sign(payload, process.env.JWT, {
       expiresIn: "1h",
     });
 
     const response = await request(app)
-      .get("/user/")
+      .get("/user")
       .set("Authorization", `Bearer ${token}`)
       .expect(200);
 
     expect(response.body.user.id).toBe(payload.id);
     expect(response.body.user.email).toBe(payload.email);
+    expect(response.body.user.firstname).toBe(payload.firstname);
+    expect(response.body.user.lastname).toBe(payload.lastname);
   });
 });

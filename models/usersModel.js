@@ -78,7 +78,11 @@ const updateUser = async (userId, updatedData) => {
   try {
     const [updatedUser] = await knex("users")
       .where({ id: userId })
-      .update(updatedData)
+      .update({
+        first_name: updatedData.firstname,
+        last_name: updatedData.lastname,
+        username: updatedData.username,
+      })
       .returning("*");
     return updatedUser;
   } catch (error) {

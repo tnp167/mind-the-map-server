@@ -47,9 +47,18 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ id: user.id, email: email }, process.env.JWT, {
-      expiresIn: "6h",
-    });
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: email,
+        firstname: user.first_name,
+        lastname: user.last_name,
+      },
+      process.env.JWT,
+      {
+        expiresIn: "6h",
+      }
+    );
 
     res.status(200).json({ token });
   } catch (error) {
@@ -60,6 +69,18 @@ router.post("/login", async (req, res) => {
 router.get("/", authentication, async (req, res) => {
   try {
     res.status(200).json({ user: req.user });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.patch("/:id", async (req, res) => {
+  const userId = req.params.id;
+  const updatedData = req.body;
+
+  try {
+    const updatedUser = await users.updateUser(userId, updatedData);
+    res.status(200).json({ user: updatedUser });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
