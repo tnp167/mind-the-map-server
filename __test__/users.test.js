@@ -41,20 +41,6 @@ describe("Users Table", () => {
     expect(insertedUser.email).toBe(testUserData.email);
   });
 
-  it("should retrieve a user by email", async () => {
-    const testUserData = {
-      firstname: "testfirstname",
-      lastname: "testlastname1",
-      password: "testpassword",
-      email: "testuser0@example.com",
-    };
-
-    const newUser = await users.createUser(testUserData);
-    const insertedUser = await users.getUserByEmail(newUser.email);
-    expect(insertedUser).toBeDefined();
-    expect(insertedUser.email).toBe(testUserData.email);
-  });
-
   it("should retrieve a user by ID", async () => {
     const testUserData = {
       firstname: "testfirstname",
@@ -77,11 +63,14 @@ describe("Users Table", () => {
     };
     const newUser = await users.createUser(testUserData);
     const updatedUserData = {
-      email: "updateduser@example.com",
+      firstname: "updatefirstname",
+      lastname: "updatelastname",
+      username: "update",
     };
     const updatedUser = await users.updateUser(newUser.id, updatedUserData);
     expect(updatedUser).toBeDefined();
-    expect(updatedUser.email).toBe(updatedUserData.email);
+    expect(updatedUser.first_name).toBe(updatedUserData.firstname);
+    expect(updatedUser.last_name).toBe(updatedUserData.lastname);
   });
 
   it("should return a valid token", async () => {

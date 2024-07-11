@@ -15,8 +15,8 @@ const createUser = async (userData) => {
     const emptyFields = [];
     if (!first_name) emptyFields.push("first name");
     if (!last_name) emptyFields.push("last name");
-    if (!email) emptyFields.push("first name");
-    if (!password) emptyFields.push("first name");
+    if (!email) emptyFields.push("email");
+    if (!password) emptyFields.push("password");
     throw new Error(
       `Please fill in the required fields: ${emptyFields.join(", ")}`
     );
@@ -56,15 +56,6 @@ const createUser = async (userData) => {
   }
 };
 
-const getUserByEmail = async (userEmail) => {
-  try {
-    const user = await knex("users").where({ email: userEmail }).first();
-    return user;
-  } catch (error) {
-    throw error;
-  }
-};
-
 const getUserById = async (userId) => {
   try {
     const user = await knex("users").where({ id: userId }).first();
@@ -94,5 +85,4 @@ module.exports = {
   createUser,
   getUserById,
   updateUser,
-  getUserByEmail,
 };

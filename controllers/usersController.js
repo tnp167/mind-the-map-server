@@ -51,8 +51,8 @@ router.post("/login", async (req, res) => {
       {
         id: user.id,
         email: email,
-        firstname: user.first_name,
-        lastname: user.last_name,
+        first_name: user.first_name,
+        last_name: user.last_name,
       },
       process.env.JWT,
       {
@@ -80,7 +80,19 @@ router.patch("/:id", async (req, res) => {
 
   try {
     const updatedUser = await users.updateUser(userId, updatedData);
-    res.status(200).json({ user: updatedUser });
+
+    const token = jwt.sign(
+      {
+        id: updatedUser.id,
+        email: updatedUser.email,
+        first_name: updatedUser.first_name,
+        last_name: updatedUser.last_name,
+      },
+      process.env.JWT,
+      { expiresIn: "6h" }
+    );
+
+    res.status(200).json({ user: updatedUser, token });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

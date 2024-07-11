@@ -9,7 +9,7 @@ exports.up = function (knex) {
     table.string("last_name").notNullable();
     table.string("email").notNullable().unique();
     table.string("password").notNullable();
-    table.string("username");
+    table.string("username").unique();
     table.binary("picture");
     table
       .timestamp("created_at", { useTz: true, precision: 6 })
