@@ -98,4 +98,14 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
+router.get("/check-username/:username", async (req, res) => {
+  const username = req.params.username;
+  try {
+    const available = await users.checkUsername(username);
+    res.status(200).json({ available });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;
