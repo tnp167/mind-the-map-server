@@ -99,10 +99,28 @@ const checkUsername = async (username) => {
   }
 };
 
+const updatePicture = async (userId, updatedPicture) => {
+  const base64Data = updatedPicture.picture.split(",")[1];
+  const binaryData = Buffer.from(base64Data, "base64");
+
+  try {
+    const [updatedUser] = await knex("users")
+      .where({ id: userId })
+      .update({
+        picture: binaryData,
+      })
+      .returning("*");
+    return updatedUser;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   createUser,
   getUserById,
   getUserByEmail,
   updateUser,
   checkUsername,
+  updatePicture,
 };

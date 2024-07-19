@@ -50,7 +50,7 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(
       {
         id: user.id,
-        email: email,
+        email: user.email,
         first_name: user.first_name,
         last_name: user.last_name,
       },
@@ -87,6 +87,7 @@ router.patch("/:id", async (req, res) => {
         email: updatedUser.email,
         first_name: updatedUser.first_name,
         last_name: updatedUser.last_name,
+        picture: updatedUser.picture,
       },
       process.env.JWT,
       { expiresIn: "6h" }
@@ -103,6 +104,30 @@ router.get("/check-username/:username", async (req, res) => {
   try {
     const available = await users.checkUsername(username);
     res.status(200).json({ available });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.patch("/:id/picture", async (req, res) => {
+  const userId = req.params.id;
+  const updatedPicture = req.body;
+
+  try {
+    const updatedUser = await users.updatePicture(userId, updatedPicture);
+
+    const token = jwt.sign(
+      {
+        id: updatedUser.id,
+        email: updatedUser.email,
+        first_name: updatedUser.first_name,
+        last_name: updatedUser.last_name,
+        picture: updatedUser.picture,
+      },
+      process.env.JWT,
+      { expiresIn: "6h" }
+    );
+    res.status(200).json({ user: updatedUser, token });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -7,5 +7,6 @@ router.route("/login").post(usersController);
 router.route("/").get(usersController);
 router.route("/:id").patch(usersController);
 router.route("/check-username/:username").get(usersController);
+router.route("/:id/picture").patch(usersController);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+
 const cors = require("cors");
 const userRoutes = require("./routes/userRoutes");
 
@@ -10,7 +11,7 @@ const cors_origin = process.env.CORS_ORIGIN;
 
 app.use(cors(cors_origin));
 
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
 
 app.use("/user", userRoutes);
 
