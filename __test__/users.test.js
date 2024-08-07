@@ -16,8 +16,20 @@ app.get("/user", authentication, async (req, res) => {
 });
 
 describe("Users Table", () => {
+  let testUserData;
+
   beforeAll(async () => {
     await knex.migrate.latest();
+    testUserData = {
+      firstname: `testfirstname_${Date.now()}`,
+      lastname: `testlastname_${Date.now()}`,
+      password: "testpassword",
+      email: `test${Date.now()}@hotmail.com`,
+    };
+  });
+
+  beforeEach(async () => {
+    await knex("users").delete();
   });
 
   afterAll(async () => {
@@ -26,13 +38,6 @@ describe("Users Table", () => {
   });
 
   it("should insert a new user", async () => {
-    const testUserData = {
-      firstname: "testfirstname",
-      lastname: "testlastname",
-      password: "testpassword",
-      email: "testuser@example.com",
-    };
-
     const insertedUser = await users.createUser(testUserData);
 
     expect(insertedUser).toBeDefined();
@@ -42,12 +47,6 @@ describe("Users Table", () => {
   });
 
   it("should retrieve a user by ID", async () => {
-    const testUserData = {
-      firstname: "testfirstname",
-      lastname: "testlastname",
-      password: "testpassword",
-      email: "testuser1@example.com",
-    };
     const newUser = await users.createUser(testUserData);
     const insertedUser = await users.getUserById(newUser.id);
     expect(insertedUser).toBeDefined();
@@ -55,12 +54,6 @@ describe("Users Table", () => {
   });
 
   it("should update a user", async () => {
-    let testUserData = {
-      firstname: "testfirstname",
-      lastname: "testlastname",
-      password: "testpassword",
-      email: "testuser2@example.com",
-    };
     const newUser = await users.createUser(testUserData);
     const updatedUserData = {
       firstname: "updatefirstname",
@@ -76,7 +69,7 @@ describe("Users Table", () => {
   it("should return a valid token", async () => {
     const payload = {
       id: 1,
-      email: "test@example.com",
+      email: "testuser3@example.com",
       firstname: "testFirst",
       lastname: "testLast",
     };
@@ -93,5 +86,24 @@ describe("Users Table", () => {
     expect(response.body.user.email).toBe(payload.email);
     expect(response.body.user.firstname).toBe(payload.firstname);
     expect(response.body.user.lastname).toBe(payload.lastname);
+  });
+
+  it("should update a user picture and picture URL", async () => {
+    const newUser = await users.createUser(testUserData);
+
+    const updatedPicture = {
+      signedUrl: "https://example.com/signed-url",
+      pictureName: "new-picture.jpg",
+    };
+
+    const updatedUser = await users.updatePicture(
+      newUser.id,
+      updatedPicture.signedUrl,
+      updatedPicture.pictureName
+    );
+
+    expect(updatedUser).toBeDefined();
+    expect(updatedUser.picture).toBe(updatedPicture.pictureName);
+    expect(updatedUser.pictureUrl).toBe(updatedPicture.signedUrl);
   });
 });

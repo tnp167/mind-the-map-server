@@ -4,11 +4,13 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "jest --detectOpenHandles",
+    "test": "NODE_ENV=test jest --detectOpenHandles",
     "start": "node server.js",
     "dev": "node --watch server.js",
     "migrate": "knex migrate:latest",
+    "migrate:test": "NODE_ENV=test npx knex migrate:latest",
     "rollback": "knex migrate:rollback",
+    "rollback:test": "NODE_ENV=test npx knex migrate:rollback",
     "seed": "knex seed:run"
   },
   "author": "",

@@ -46,22 +46,7 @@ const createUser = async (userData) => {
     const insertedUser = await knex("users").insert(newUser).returning("*");
     return insertedUser[0];
   } catch (error) {
-    // if (error.code === "23505") {
-    //   console.error("Duplicate email:", userData.email);
-    //   throw new Error("Email address already exists");
-    // } else {
     console.error("Error inserting user:", error.message);
-    throw error;
-    //}
-  }
-};
-
-const getAllUser = async () => {
-  try {
-    const users = await knex("users").select("*");
-    return users;
-  } catch (error) {
-    console.error("Error fetching users:", error);
     throw error;
   }
 };
@@ -110,9 +95,6 @@ const checkUsername = async (username) => {
 };
 
 const updatePicture = async (userId, signedUrl, pictureName) => {
-  // const base64Data = updatedPicture.picture.split(",")[1];
-  // const binaryData = Buffer.from(base64Data, "base64");
-
   try {
     const [updatedUser] = await knex("users")
       .where({ id: userId })
@@ -129,7 +111,6 @@ const updatePicture = async (userId, signedUrl, pictureName) => {
 
 module.exports = {
   createUser,
-  getAllUser,
   getUserById,
   getUserByEmail,
   updateUser,
