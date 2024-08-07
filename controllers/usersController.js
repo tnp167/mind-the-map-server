@@ -3,6 +3,11 @@ const router = require("express").Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const authentication = require("../middleware/auth");
+const {
+  upload,
+  generateSignedUrl,
+  deleteObject,
+} = require("../config/s3Utils");
 
 router.post("/register", async (req, res) => {
   try {
@@ -47,12 +52,19 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
+    if (user.picture) {
+      const signedUrl = await generateSignedUrl(user.picture);
+      user.pictureUrl = signedUrl;
+    }
+
     const token = jwt.sign(
       {
         id: user.id,
         email: user.email,
         first_name: user.first_name,
         last_name: user.last_name,
+        picture: user.picture,
+        pictureUrl: user.pictureUrl,
       },
       process.env.JWT,
       {
@@ -109,12 +121,28 @@ router.get("/check-username/:username", async (req, res) => {
   }
 });
 
-router.patch("/:id/picture", async (req, res) => {
+router.patch("/:id/picture", upload.single("picture"), async (req, res) => {
   const userId = req.params.id;
-  const updatedPicture = req.body;
+  const file = req.file;
+
+  if (!file) {
+    return res.status(400).json({ error: "No file uploaded" });
+  }
 
   try {
-    const updatedUser = await users.updatePicture(userId, updatedPicture);
+    const pictureName = file.key;
+    const signedUrl = await generateSignedUrl(file.key);
+
+    const user = await users.getUserById(userId);
+    if (user.picture) {
+      await deleteObject(user.picture);
+    }
+
+    const updatedUser = await users.updatePicture(
+      userId,
+      signedUrl,
+      pictureName
+    );
 
     const token = jwt.sign(
       {
@@ -122,7 +150,8 @@ router.patch("/:id/picture", async (req, res) => {
         email: updatedUser.email,
         first_name: updatedUser.first_name,
         last_name: updatedUser.last_name,
-        picture: updatedUser.picture,
+        picture: pictureName,
+        pictureUrl: signedUrl,
       },
       process.env.JWT,
       { expiresIn: "6h" }

@@ -56,6 +56,16 @@ const createUser = async (userData) => {
   }
 };
 
+const getAllUser = async () => {
+  try {
+    const users = await knex("users").select("*");
+    return users;
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw error;
+  }
+};
+
 const getUserById = async (userId) => {
   try {
     const user = await knex("users").where({ id: userId }).first();
@@ -99,15 +109,16 @@ const checkUsername = async (username) => {
   }
 };
 
-const updatePicture = async (userId, updatedPicture) => {
-  const base64Data = updatedPicture.picture.split(",")[1];
-  const binaryData = Buffer.from(base64Data, "base64");
+const updatePicture = async (userId, signedUrl, pictureName) => {
+  // const base64Data = updatedPicture.picture.split(",")[1];
+  // const binaryData = Buffer.from(base64Data, "base64");
 
   try {
     const [updatedUser] = await knex("users")
       .where({ id: userId })
       .update({
-        picture: binaryData,
+        picture: pictureName,
+        pictureUrl: signedUrl,
       })
       .returning("*");
     return updatedUser;
@@ -118,6 +129,7 @@ const updatePicture = async (userId, updatedPicture) => {
 
 module.exports = {
   createUser,
+  getAllUser,
   getUserById,
   getUserByEmail,
   updateUser,
