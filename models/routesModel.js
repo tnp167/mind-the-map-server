@@ -20,12 +20,12 @@ const createRoute = async (routeData) => {
   }
 };
 
-const getRouteById = async (routeId) => {
+const getRouteById = async (userId) => {
   try {
-    const route = await knex("routes").where({ id: routeId }).first();
+    const route = await knex("routes").where({ user_id: userId });
     return route;
   } catch (error) {
-    throw error;
+    throw new Error(`Route not found for user_id ${userId}`);
   }
 };
 
