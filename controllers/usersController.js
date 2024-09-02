@@ -100,6 +100,7 @@ router.patch("/:id", async (req, res) => {
         first_name: updatedUser.first_name,
         last_name: updatedUser.last_name,
         picture: updatedUser.picture,
+        pictureUrl: updatedUser.pictureUrl,
       },
       process.env.JWT,
       { expiresIn: "6h" }

@@ -6,7 +6,7 @@ const createRoute = async (routeData) => {
     .first();
 
   if (!userExists) {
-    throw new Error("User with provided user_id does not exist.");
+    throw new Error("User with provided user ID does not exist.");
   }
 
   try {

@@ -52,7 +52,7 @@ const generateSignedUrl = async (key) => {
   });
   try {
     const signedUrl = await getSignedUrl(s3Client, command, {
-      expiresIn: 3600,
+      expiresIn: 86400,
     });
     return signedUrl;
   } catch (error) {
