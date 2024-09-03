@@ -74,25 +74,21 @@ describe("Routes Table", () => {
     expect(updatedRoute.name).toBe(updatedRouteData.name);
   });
 
-  // it("should delete a route by ID", async () => {
-  //   const testRouteData = {
-  //     user_id: 1,
-  //     start_point: "51.5054,0.0235",
-  //     end_point: "51.530882,0.0957",
-  //     name: "testname1",
-  //   };
-  //   const newRoute = await routes.createRoute(testRouteData);
+  it("should delete a route by ID", async () => {
+    testRouteData.user_id = userId;
 
-  //   const deletionResult = await routes.deleteRoute(newRoute.id);
+    const newRoute = await routes.createRoute(testRouteData);
 
-  //   expect(deletionResult.success).toBe(true);
-  //   expect(deletionResult.message).toContain(
-  //     `Route with ID ${newRoute.id} deleted successfully.`
-  //   );
+    const deletionResult = await routes.deleteRoute(newRoute.id);
 
-  //   const deletedRoute = await knex("routes")
-  //     .where({ id: newRoute.id })
-  //     .first();
-  //   expect(deletedRoute).toBeUndefined();
-  // });
+    expect(deletionResult.success).toBe(true);
+    expect(deletionResult.message).toContain(
+      `Route with ID ${newRoute.id} deleted successfully.`
+    );
+
+    const deletedRoute = await knex("routes")
+      .where({ id: newRoute.id })
+      .first();
+    expect(deletedRoute).toBeUndefined();
+  });
 });

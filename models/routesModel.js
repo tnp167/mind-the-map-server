@@ -22,7 +22,9 @@ const createRoute = async (routeData) => {
 
 const getRouteByUserId = async (userId) => {
   try {
-    const route = await knex("routes").where({ user_id: userId });
+    const route = await knex("routes")
+      .where({ user_id: userId })
+      .orderBy("updated_at", "desc");
     return route;
   } catch (error) {
     throw new Error(`Route not found for user_id ${userId}`);
@@ -33,7 +35,10 @@ const updateRoute = async (routeId, name) => {
   try {
     const [updatedRoute] = await knex("routes")
       .where({ id: routeId })
-      .update({ name: name })
+      .update({
+        name: name,
+        updated_at: knex.fn.now(),
+      })
       .returning("*");
 
     return updatedRoute;

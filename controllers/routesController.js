@@ -48,4 +48,19 @@ router.patch("/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    if (!id) {
+      return res.status(400).json({ error: "route ID not existed" });
+    }
+
+    const route = await routes.deleteRoute(id);
+    res.status(201).json(route);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 module.exports = router;
