@@ -4,5 +4,6 @@ const routesController = require("../controllers/routesController");
 
 router.route("/bookmark").post(routesController);
 router.route("/userId/:id").get(routesController);
+router.route("/:id").patch(routesController);
 
 module.exports = router;

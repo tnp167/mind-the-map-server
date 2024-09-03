@@ -29,11 +29,11 @@ const getRouteByUserId = async (userId) => {
   }
 };
 
-const updateRoute = async (routeId, updatedData) => {
+const updateRoute = async (routeId, name) => {
   try {
     const [updatedRoute] = await knex("routes")
       .where({ id: routeId })
-      .update(updatedData)
+      .update({ name: name })
       .returning("*");
 
     return updatedRoute;

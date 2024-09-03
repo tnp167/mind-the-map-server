@@ -10,6 +10,7 @@ describe("Routes Table", () => {
     user_id: userId,
     start_point: "51.5054,0.0235",
     end_point: "51.530882,0.0957",
+    name: "Test",
   };
 
   const userData = {
@@ -56,25 +57,22 @@ describe("Routes Table", () => {
     expect(retrievedRoute[0].user_id).toBe(newRoute.user_id);
   });
 
-  // it("should update name of route", async () => {
-  //   const testRouteData = {
-  //     user_id: 1,
-  //     start_point: "51.5054,0.0235",
-  //     end_point: "51.530882,0.0957",
-  //     name: "testname1",
-  //   };
-  //   const newRoute = await routes.createRoute(testRouteData);
+  it("should update name of route", async () => {
+    testRouteData.user_id = userId;
 
-  //   const updatedRouteData = {
-  //     name: "testname2",
-  //   };
-  //   const updatedRoute = await routes.updateRoute(
-  //     newRoute.id,
-  //     updatedRouteData
-  //   );
-  //   expect(updatedRoute).toBeDefined();
-  //   expect(updatedRoute.name).toBe(updatedRouteData.name);
-  // });
+    const newRoute = await routes.createRoute(testRouteData);
+
+    const updatedRouteData = {
+      name: "testname2",
+    };
+    const updatedRoute = await routes.updateRoute(
+      newRoute.id,
+      updatedRouteData.name
+    );
+
+    expect(updatedRoute).toBeDefined();
+    expect(updatedRoute.name).toBe(updatedRouteData.name);
+  });
 
   // it("should delete a route by ID", async () => {
   //   const testRouteData = {

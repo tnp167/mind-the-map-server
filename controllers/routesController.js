@@ -21,16 +21,31 @@ router.get("/userId/:id", async (req, res) => {
     if (!userId) {
       return res.status(400).json({ error: "User ID is required" });
     }
-    const route = await routes.getRouteByUserId(userId);
+    const allRoute = await routes.getRouteByUserId(userId);
 
-    if (!route) {
+    if (!allRoute) {
       return res.status(404).json({ error: "Route not found" });
     }
 
-    res.status(201).json(route);
+    res.status(201).json(allRoute);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
+router.patch("/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { name } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ error: "route ID not existed" });
+    }
+
+    const route = await routes.updateRoute(id, name);
+    res.status(201).json(route);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 module.exports = router;
