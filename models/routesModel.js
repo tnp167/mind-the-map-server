@@ -20,7 +20,7 @@ const createRoute = async (routeData) => {
   }
 };
 
-const getRouteById = async (userId) => {
+const getRouteByUserId = async (userId) => {
   try {
     const route = await knex("routes").where({ user_id: userId });
     return route;
@@ -35,6 +35,7 @@ const updateRoute = async (routeId, updatedData) => {
       .where({ id: routeId })
       .update(updatedData)
       .returning("*");
+
     return updatedRoute;
   } catch (error) {
     throw error;
@@ -59,7 +60,7 @@ const deleteRoute = async (routeId) => {
 };
 module.exports = {
   createRoute,
-  getRouteById,
+  getRouteByUserId,
   updateRoute,
   deleteRoute,
 };

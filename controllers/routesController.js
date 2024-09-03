@@ -21,10 +21,10 @@ router.get("/userId/:id", async (req, res) => {
     if (!userId) {
       return res.status(400).json({ error: "User ID is required" });
     }
-    const route = await routes.getRouteById(userId);
+    const route = await routes.getRouteByUserId(userId);
 
     if (!route) {
-      return res.status(404).json({ error: "Route not found" }); // Handle not found case
+      return res.status(404).json({ error: "Route not found" });
     }
 
     res.status(201).json(route);

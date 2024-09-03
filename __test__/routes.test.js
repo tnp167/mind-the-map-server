@@ -36,9 +36,7 @@ describe("Routes Table", () => {
 
     await routes.createRoute(testRouteData);
 
-    const insertedRoute = await knex("routes")
-      .where({ user_id: testRouteData.user_id })
-      .first();
+    const insertedRoute = await routes.createRoute(testRouteData);
 
     expect(insertedRoute).toBeDefined();
     expect(insertedRoute.start_point).toBe(testRouteData.start_point);
@@ -46,23 +44,17 @@ describe("Routes Table", () => {
     expect(insertedRoute.user_id).toBe(testRouteData.user_id);
   });
 
-  // it("should retrieve a route by ID", async () => {
-  //   const testRouteData = {
-  //     user_id: 1,
-  //     start_point: "51.5054,0.0235",
-  //     end_point: "51.530882,0.0957",
-  //     name: "testname1",
-  //   };
+  it("should retrieve a route by user ID", async () => {
+    testRouteData.user_id = userId;
 
-  //   const newRoute = await routes.createRoute(testRouteData);
-  //   const retrievedRoute = await routes.getRouteById(newRoute.id);
+    const newRoute = await routes.createRoute(testRouteData);
+    const retrievedRoute = await routes.getRouteByUserId(userId);
 
-  //   expect(retrievedRoute).toBeDefined();
-  //   expect(retrievedRoute.id).toBe(newRoute.id);
-  //   expect(retrievedRoute.start_point).toBe(testRouteData.start_point);
-  //   expect(retrievedRoute.end_point).toBe(testRouteData.end_point);
-  //   expect(retrievedRoute.user_id).toBe(testRouteData.user_id);
-  // });
+    expect(retrievedRoute).toBeDefined();
+    expect(retrievedRoute[0].start_point).toBe(newRoute.start_point);
+    expect(retrievedRoute[0].end_point).toBe(newRoute.end_point);
+    expect(retrievedRoute[0].user_id).toBe(newRoute.user_id);
+  });
 
   // it("should update name of route", async () => {
   //   const testRouteData = {
