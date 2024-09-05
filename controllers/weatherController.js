@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
     );
     res.status(200).json(weatherData);
   } catch (error) {
-    res.status(500).send("Error fetching weather data");
+    res.status(500).json({ error: error.message });
   }
 });
 

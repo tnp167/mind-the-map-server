@@ -15,7 +15,7 @@ router.get("/restaurants", async (req, res) => {
 
     res.status(200).json(restaurantsList);
   } catch (error) {
-    res.status(500).send("Error fetching restaurant data");
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -29,7 +29,7 @@ router.get("/toilets", async (req, res) => {
     );
     res.status(200).json(toiletsList);
   } catch (error) {
-    res.status(500).send("Error fetching toilet data");
+    res.status(500).json({ error: error.message });
   }
 });
 module.exports = router;

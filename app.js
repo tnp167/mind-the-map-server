@@ -6,6 +6,8 @@ const userRoutes = require("./routes/userRoutes");
 const routeRoutes = require("./routes/routeRoutes");
 const weatherRoutes = require("./routes/weatherRoutes");
 const facilitiesRoutes = require("./routes/facilitiesRoutes");
+const mapRoutes = require("./routes/mapRoutes");
+
 require("dotenv").config();
 const PORT = process.env.PORT || 8080;
 
@@ -19,5 +21,6 @@ app.use("/user", userRoutes);
 app.use("/route", routeRoutes);
 app.use("/api/weather", weatherRoutes);
 app.use("/api/facilities", facilitiesRoutes);
+app.use("/api/map", mapRoutes);
 
 module.exports = app;

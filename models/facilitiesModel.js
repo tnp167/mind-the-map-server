@@ -13,11 +13,11 @@ const fetchRestaurantsList = async (lat, lng, apiKey) => {
         "X-RapidAPI-Host": "travel-advisor.p.rapidapi.com",
       },
     };
-    const response = await axios.get(
+    const { data } = await axios.get(
       "https://travel-advisor.p.rapidapi.com/restaurants/list-by-latlng",
       options
     );
-    return response.data;
+    return data;
   } catch (error) {
     throw new Error("Error fetching restaurants list");
   }
@@ -35,11 +35,11 @@ const fetchToiletsList = async (lat, lng, apiKey) => {
         "X-RapidAPI-Host": "public-bathrooms.p.rapidapi.com",
       },
     };
-    const response = await axios.get(
+    const { data } = await axios.get(
       "https://public-bathrooms.p.rapidapi.com/location",
       options
     );
-    return response.data;
+    return data;
   } catch (error) {
     throw new Error("Error fetching toilets list");
   }
