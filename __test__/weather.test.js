@@ -5,7 +5,7 @@ const weather = require("../models/weatherModel");
 jest.mock("../models/weatherModel");
 
 describe("Weather API controller", () => {
-  it("should return weather data when valid query weather are provided", async () => {
+  it("should return weather data when valid coordinates are provided", async () => {
     const weatherData = {
       coord: { lon: 0.0235, lat: 51.5054 },
       weather: [
@@ -22,7 +22,7 @@ describe("Weather API controller", () => {
     weather.fetchWeatherData.mockResolvedValue(weatherData);
 
     await request(app)
-      .get("/weather")
+      .get("/api/weather")
       .query({ lat: "51.5054", lon: "0.0235" })
       .expect(200)
       .expect((res) => {
