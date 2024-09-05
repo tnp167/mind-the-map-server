@@ -15,8 +15,21 @@ router.get("/restaurants", async (req, res) => {
 
     res.status(200).json(restaurantsList);
   } catch (error) {
-    res.status(500).send("Error fetching weather data");
+    res.status(500).send("Error fetching restaurant data");
   }
 });
 
+router.get("/toilets", async (req, res) => {
+  const { lat, lon } = req.query;
+  try {
+    const toiletsList = await facilities.fetchToiletsList(
+      lat,
+      lon,
+      rapidAccessToken
+    );
+    res.status(200).json(toiletsList);
+  } catch (error) {
+    res.status(500).send("Error fetching toilet data");
+  }
+});
 module.exports = router;
