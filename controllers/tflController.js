@@ -11,4 +11,14 @@ router.get("/journey", async (req, res) => {
   }
 });
 
+router.get("/crowding/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const crowdingData = await tfl.fetchCrowdingData(id);
+    res.status(200).json(crowdingData);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;

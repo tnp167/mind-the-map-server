@@ -50,4 +50,24 @@ describe("TfL API controller", () => {
         );
       });
   });
+
+  it("should return crowding data when naptan id is provided", async () => {
+    const crowdingData = {
+      dataAvailable: true,
+      percentageOfBaseline: 0.43,
+    };
+
+    const naptanId = "940GZZLUKSL";
+
+    tfl.fetchCrowdingData.mockResolvedValue(crowdingData);
+
+    await request(app)
+      .get(`/api/tfl/crowding/${naptanId}`)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toBeDefined();
+        expect(res.body.dataAvailable).toBe(true);
+        expect(res.body.percentageOfBaseline).toBe(0.43);
+      });
+  });
 });
