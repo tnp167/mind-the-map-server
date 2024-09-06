@@ -25,8 +25,13 @@ describe("TfL API controller", () => {
     tfl.fetchJourneyData.mockResolvedValue(journeyData);
 
     await request(app)
-      .get("/api/tfl/journey")
-      .query({ lat: "51.530882", lon: "0.0957" })
+      .get(`/api/tfl/journey`)
+      .query({
+        startLat: "51.530882",
+        startLon: "0.0957",
+        endLat: "51.5054",
+        endLon: "0.0235",
+      })
       .expect(200)
       .expect((res) => {
         expect(res.body.journey).toBeDefined();

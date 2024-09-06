@@ -8,7 +8,7 @@ describe("Map API controller", () => {
   it("should return map data  when valid coordinates are provided", async () => {
     const mapData = {
       type: "FeatureCollection",
-      query: [0.0957, 51.530882],
+      query: [51.530882, 0.0957],
       features: [
         {
           id: "address.4548513221488630",

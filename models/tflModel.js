@@ -2,10 +2,10 @@ const axios = require("axios");
 
 const TflBaseUrl = process.env.TFL_BASE_URL;
 
-const fetchJourneyData = async (start, end) => {
+const fetchJourneyData = async (startLat, startLon, endLat, endLon) => {
   try {
     const { data } = await axios.get(
-      `${TflBaseUrl}/Journey/JourneyResults/${start}/to/${end}`
+      `${TflBaseUrl}/Journey/JourneyResults/${startLat},${startLon}/to/${endLat},${endLon}`
     );
 
     return data;

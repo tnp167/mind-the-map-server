@@ -1,5 +1,8 @@
 const axios = require("axios");
 
+const restaurantBaseUrl = process.env.RESTAURANT_BASE_URL;
+const toiletBaseUrl = process.env.TOILET_BASE_URL;
+
 const fetchRestaurantsList = async (lat, lng, apiKey) => {
   try {
     const options = {
@@ -13,10 +16,7 @@ const fetchRestaurantsList = async (lat, lng, apiKey) => {
         "X-RapidAPI-Host": "travel-advisor.p.rapidapi.com",
       },
     };
-    const { data } = await axios.get(
-      "https://travel-advisor.p.rapidapi.com/restaurants/list-by-latlng",
-      options
-    );
+    const { data } = await axios.get(restaurantBaseUrl, options);
     return data;
   } catch (error) {
     throw new Error("Error fetching restaurants list");
@@ -35,10 +35,7 @@ const fetchToiletsList = async (lat, lng, apiKey) => {
         "X-RapidAPI-Host": "public-bathrooms.p.rapidapi.com",
       },
     };
-    const { data } = await axios.get(
-      "https://public-bathrooms.p.rapidapi.com/location",
-      options
-    );
+    const { data } = await axios.get(toiletBaseUrl, options);
     return data;
   } catch (error) {
     throw new Error("Error fetching toilets list");

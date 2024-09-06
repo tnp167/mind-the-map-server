@@ -87,7 +87,7 @@ const updateUser = async (userId, updatedData) => {
 
 const checkUsername = async (username) => {
   try {
-    const user = await knex("users").where({ username }).first();
+    const user = await knex("users").where({ username: username }).first();
     return user === undefined;
   } catch (error) {
     throw new Error(error);

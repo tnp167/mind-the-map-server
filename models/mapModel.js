@@ -1,13 +1,15 @@
 const axios = require("axios");
 
+const mapboxBaseUrl = process.env.MAPBOXGL_BASE_URL;
+
 const fetchMapData = async (lat, lon, apiKey) => {
   try {
     const { data } = await axios.get(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${lon},${lat}.json?access_token=${apiKey}`
+      `${mapboxBaseUrl}${lon},${lat}.json?access_token=${apiKey}`
     );
     return data;
   } catch {
-    throw new Error("Error fetching weather data");
+    throw new Error("Error fetching map data");
   }
 };
 
