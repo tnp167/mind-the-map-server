@@ -16,9 +16,16 @@ const fetchJourneyData = async (start, end) => {
 
 const fetchCrowdingData = async (naptanId) => {
   try {
-    const { data } = await axios.get(
-      `https://api.tfl.gov.uk/crowding/${naptanId}/live`
-    );
+    const { data } = await axios.get(`${TflBaseUrl}/crowding/${naptanId}/live`);
+    return data;
+  } catch {
+    throw new Error("Error fetching data");
+  }
+};
+
+const fetchLineStatusData = async (mode) => {
+  try {
+    const { data } = await axios.get(`${TflBaseUrl}/line/mode/${mode}/status`);
     return data;
   } catch {
     throw new Error("Error fetching data");
@@ -27,4 +34,5 @@ const fetchCrowdingData = async (naptanId) => {
 module.exports = {
   fetchJourneyData,
   fetchCrowdingData,
+  fetchLineStatusData,
 };

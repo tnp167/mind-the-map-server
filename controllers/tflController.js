@@ -21,4 +21,14 @@ router.get("/crowding/:id", async (req, res) => {
   }
 });
 
+router.get("/status/:mode", async (req, res) => {
+  const { mode } = req.params;
+  try {
+    const status = await tfl.fetchLineStatusData(mode);
+    res.status(200).json(status);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;

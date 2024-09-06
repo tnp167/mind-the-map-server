@@ -70,4 +70,44 @@ describe("TfL API controller", () => {
         expect(res.body.percentageOfBaseline).toBe(0.43);
       });
   });
+
+  it("should return line status wheb mode is provided", async () => {
+    const lineStatusData = [
+      {
+        id: "bakerloo",
+        modeName: "tube",
+        lineStatuses: [
+          {
+            statusSeverity: 6,
+          },
+        ],
+      },
+      {
+        id: "central",
+        modeName: "tube",
+        lineStatuses: [
+          {
+            statusSeverity: 5,
+          },
+        ],
+      },
+    ];
+
+    const mode = "tube";
+    tfl.fetchLineStatusData.mockResolvedValue(lineStatusData);
+    await request(app)
+      .get(`/api/tfl/status/${mode}`)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toBeDefined();
+
+        expect(res.body[0].id).toBe("bakerloo");
+        expect(res.body[0].lineStatuses).toBeDefined();
+        expect(res.body[0].lineStatuses[0].statusSeverity).toBe(6);
+
+        expect(res.body[1].id).toBe("central");
+        expect(res.body[1].lineStatuses).toBeDefined();
+        expect(res.body[1].lineStatuses[0].statusSeverity).toBe(5);
+      });
+  });
 });
