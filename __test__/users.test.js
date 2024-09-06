@@ -2,18 +2,8 @@ const knexConfig = require("../knexfile").test;
 const knex = require("knex")(knexConfig);
 const request = require("supertest");
 const users = require("../models/usersModel");
-const express = require("express");
-const app = express();
+const app = require("../app");
 const jwt = require("jsonwebtoken");
-const authentication = require("../middleware/auth");
-
-app.get("/user", authentication, async (req, res) => {
-  try {
-    res.status(200).json({ user: req.user });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
 
 describe("Users Table", () => {
   let testUserData;
