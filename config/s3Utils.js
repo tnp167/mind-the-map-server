@@ -33,7 +33,7 @@ const upload = multer({
       cb(null, { fieldName: file.fieldname });
     },
     key: function (req, file, cb) {
-      cb(null, randomImageName(32));
+      cb(null, randomImageName(16));
     },
   }),
   limits: {

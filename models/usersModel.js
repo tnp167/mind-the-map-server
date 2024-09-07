@@ -102,6 +102,7 @@ const updatePicture = async (userId, signedUrl, pictureName) => {
       .update({
         picture: pictureName,
         pictureUrl: signedUrl,
+        updated_at: knex.fn.now(),
       })
       .returning("*");
     return updatedUser;

@@ -129,45 +129,58 @@ router.get("/check-username/:username", async (req, res) => {
   }
 });
 
-router.patch("/:id/picture", upload.single("picture"), async (req, res) => {
-  const userId = req.params.id;
-  const file = req.file;
+router.patch(
+  "/:id/picture",
+  authentication,
+  upload.single("picture"),
+  async (req, res) => {
+    const userId = req.user.id;
+    const requestUserId = Number(req.params.id);
 
-  if (!file) {
-    return res.status(400).json({ error: "No file uploaded" });
-  }
+    const file = req.file;
 
-  try {
-    const pictureName = file.key;
-    const signedUrl = await generateSignedUrl(file.key);
-
-    const user = await users.getUserById(userId);
-    if (user.picture) {
-      await deleteObject(user.picture);
+    if (userId !== requestUserId) {
+      return res
+        .status(403)
+        .json({ error: "Forbidden. You can only update your own data." });
     }
 
-    const updatedUser = await users.updatePicture(
-      userId,
-      signedUrl,
-      pictureName
-    );
+    if (!file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
 
-    const token = jwt.sign(
-      {
-        id: updatedUser.id,
-        email: updatedUser.email,
-        first_name: updatedUser.first_name,
-        last_name: updatedUser.last_name,
-        picture: pictureName,
-        pictureUrl: signedUrl,
-      },
-      process.env.JWT,
-      { expiresIn: "24h" }
-    );
-    res.status(200).json({ user: updatedUser, token });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    try {
+      const pictureName = file.key;
+      const signedUrl = await generateSignedUrl(file.key);
+
+      const user = await users.getUserById(userId);
+      if (user.picture) {
+        await deleteObject(user.picture);
+      }
+
+      const updatedUser = await users.updatePicture(
+        userId,
+        signedUrl,
+        pictureName
+      );
+
+      const token = jwt.sign(
+        {
+          id: updatedUser.id,
+          email: updatedUser.email,
+          first_name: updatedUser.first_name,
+          last_name: updatedUser.last_name,
+          picture: pictureName,
+          pictureUrl: signedUrl,
+        },
+        process.env.JWT,
+        { expiresIn: "24h" }
+      );
+      res.status(200).json({ user: updatedUser, token });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   }
-});
+);
 
 module.exports = router;

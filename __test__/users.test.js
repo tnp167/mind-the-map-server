@@ -101,19 +101,33 @@ describe("Users Table", () => {
   it("should update a user picture and picture URL", async () => {
     const newUser = await users.createUser(testUserData);
 
-    const updatedPicture = {
-      signedUrl: "https://example.com/signed-url",
-      pictureName: "new-picture.jpg",
-    };
-
-    const updatedUser = await users.updatePicture(
-      newUser.id,
-      updatedPicture.signedUrl,
-      updatedPicture.pictureName
+    let authToken = jwt.sign(
+      {
+        id: newUser.id,
+        email: newUser.email,
+        first_name: newUser.first_name,
+        last_name: newUser.last_name,
+        picture: newUser.picture,
+        pictureUrl: newUser.pictureUrl,
+      },
+      process.env.JWT,
+      { expiresIn: "24h" }
     );
 
-    expect(updatedUser).toBeDefined();
-    expect(updatedUser.picture).toBe(updatedPicture.pictureName);
-    expect(updatedUser.pictureUrl).toBe(updatedPicture.signedUrl);
+    const response = await request(app)
+      .patch(`/user/${newUser.id}/picture`)
+      .set("Authorization", `Bearer ${authToken}`)
+      .attach("picture", Buffer.from("test image content"), "test.jpg");
+
+    expect(response.status).toBe(200);
+    expect(response.body.user).toBeDefined();
+    expect(response.body.user.picture).toBeDefined();
+    expect(response.body.user.picture.length).toBe(32);
+    expect(response.body.user.pictureUrl).toBeDefined();
+    expect(
+      response.body.user.pictureUrl.startsWith(
+        "https://mind-the-map-user-picture.s3"
+      )
+    ).toBe(true);
   });
 });
