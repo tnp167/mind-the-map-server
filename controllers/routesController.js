@@ -17,9 +17,10 @@ router.post("/bookmark", authentication, async (req, res) => {
   }
 });
 
-router.get("/userId/:id", async (req, res) => {
+router.get("/userId", authentication, async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
+
     if (!userId) {
       return res.status(400).json({ error: "User ID is required" });
     }

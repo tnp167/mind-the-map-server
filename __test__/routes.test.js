@@ -62,17 +62,19 @@ describe("Routes Table", () => {
     expect(response.body.user_id).toBe(testRouteData.user_id);
   });
 
-  // it("should retrieve a route by user ID", async () => {
-  //   testRouteData.user_id = userId;
+  it("should retrieve a route by user ID", async () => {
+    testRouteData.user_id = userId;
 
-  //   const newRoute = await routes.createRoute(testRouteData);
-  //   const retrievedRoute = await routes.getRouteByUserId(userId);
+    const response = await request(app)
+      .get("/route/userId")
+      .set("Authorization", `Bearer ${authToken}`);
 
-  //   expect(retrievedRoute).toBeDefined();
-  //   expect(retrievedRoute[0].start_point).toBe(newRoute.start_point);
-  //   expect(retrievedRoute[0].end_point).toBe(newRoute.end_point);
-  //   expect(retrievedRoute[0].user_id).toBe(newRoute.user_id);
-  // });
+    expect(response.status).toBe(201);
+    expect(response.body).toBeDefined();
+    expect(response.body[0].start_point).toBe(testRouteData.start_point);
+    expect(response.body[0].end_point).toBe(testRouteData.end_point);
+    expect(response.body[0].user_id).toBe(testRouteData.user_id);
+  });
 
   // it("should update name of route", async () => {
   //   testRouteData.user_id = userId;
