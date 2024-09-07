@@ -77,6 +77,7 @@ const updateUser = async (userId, updatedData) => {
         first_name: updatedData.firstname,
         last_name: updatedData.lastname,
         username: updatedData.username,
+        updated_at: knex.fn.now(),
       })
       .returning("*");
     return updatedUser;

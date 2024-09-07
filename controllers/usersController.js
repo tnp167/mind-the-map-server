@@ -68,7 +68,7 @@ router.post("/login", async (req, res) => {
       },
       process.env.JWT,
       {
-        expiresIn: "6h",
+        expiresIn: "24h",
       }
     );
 
@@ -86,9 +86,16 @@ router.get("/", authentication, async (req, res) => {
   }
 });
 
-router.patch("/:id", async (req, res) => {
-  const userId = req.params.id;
+router.patch("/:id", authentication, async (req, res) => {
+  const userId = req.user.id;
+  const requestUserId = Number(req.params.id);
   const updatedData = req.body;
+
+  if (userId !== requestUserId) {
+    return res
+      .status(403)
+      .json({ error: "Forbidden. You can only update your own data." });
+  }
 
   try {
     const updatedUser = await users.updateUser(userId, updatedData);
@@ -103,7 +110,7 @@ router.patch("/:id", async (req, res) => {
         pictureUrl: updatedUser.pictureUrl,
       },
       process.env.JWT,
-      { expiresIn: "6h" }
+      { expiresIn: "24h" }
     );
 
     res.status(200).json({ user: updatedUser, token });
@@ -155,7 +162,7 @@ router.patch("/:id/picture", upload.single("picture"), async (req, res) => {
         pictureUrl: signedUrl,
       },
       process.env.JWT,
-      { expiresIn: "6h" }
+      { expiresIn: "24h" }
     );
     res.status(200).json({ user: updatedUser, token });
   } catch (error) {

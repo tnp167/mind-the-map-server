@@ -45,15 +45,35 @@ describe("Users Table", () => {
 
   it("should update a user", async () => {
     const newUser = await users.createUser(testUserData);
+    const token = jwt.sign(
+      {
+        id: newUser.id,
+        email: newUser.email,
+        first_name: newUser.first_name,
+        last_name: newUser.last_name,
+        picture: newUser.picture,
+        pictureUrl: newUser.pictureUrl,
+      },
+      process.env.JWT,
+      { expiresIn: "24h" }
+    );
+
     const updatedUserData = {
       firstname: "updatefirstname",
       lastname: "updatelastname",
       username: "update",
     };
-    const updatedUser = await users.updateUser(newUser.id, updatedUserData);
-    expect(updatedUser).toBeDefined();
-    expect(updatedUser.first_name).toBe(updatedUserData.firstname);
-    expect(updatedUser.last_name).toBe(updatedUserData.lastname);
+
+    const response = await request(app)
+      .patch(`/user/${newUser.id}`)
+      .send(updatedUserData)
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.user).toBeDefined();
+    expect(response.body.user.first_name).toBe(updatedUserData.firstname);
+    expect(response.body.user.last_name).toBe(updatedUserData.lastname);
+    expect(response.body.user.username).toBe(updatedUserData.username);
   });
 
   it("should return a valid token", async () => {
