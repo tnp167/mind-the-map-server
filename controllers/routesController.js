@@ -1,14 +1,16 @@
+const authentication = require("../middleware/auth");
 const routes = require("../models/routesModel");
 const router = require("express").Router();
 
-router.post("/bookmark", async (req, res) => {
+router.post("/bookmark", authentication, async (req, res) => {
   try {
-    const { start_point, end_point, user_id } = req.body;
+    const { start_point, end_point } = req.body;
+    const userId = req.user.id;
 
-    if (!start_point || !end_point || !user_id) {
+    if (!start_point || !end_point || !userId) {
       return res.status(400).json({ error });
     }
-    const newRoute = await routes.createRoute(req.body, res);
+    const newRoute = await routes.createRoute(req.body, userId);
     res.status(201).json(newRoute);
   } catch (error) {
     res.status(500).json({ error: error.message });

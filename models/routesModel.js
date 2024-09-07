@@ -1,19 +1,18 @@
 const knex = require("knex")(require("../knexfile").development);
 
-const createRoute = async (routeData) => {
-  const userExists = await knex("users")
-    .where({ id: routeData.user_id })
-    .first();
+const createRoute = async (routeData, user_id) => {
+  const userExists = await knex("users").where({ id: user_id }).first();
 
   if (!userExists) {
     throw new Error("User with provided user ID does not exist.");
   }
 
+  routeData.user_id = user_id;
+
   try {
     const [insertedRoute] = await knex("routes")
       .insert(routeData)
       .returning("*");
-
     return insertedRoute;
   } catch (error) {
     throw new Error(`Failed to create route: ${error.message}`);
