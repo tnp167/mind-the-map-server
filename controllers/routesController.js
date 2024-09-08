@@ -30,7 +30,7 @@ router.get("/userId", authentication, async (req, res) => {
       return res.status(404).json({ error: "Route not found" });
     }
 
-    res.status(201).json(allRoute);
+    res.status(200).json(allRoute);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -43,10 +43,10 @@ router.patch("/:id", authentication, async (req, res) => {
 
     const { name } = req.body;
     if (!routeId) {
-      return res.status(400).json({ error: "route ID not existed" });
+      return res.status(400).json({ error: "Route ID not existed" });
     }
 
-    const route = await routes.getRouteByRouteId(routeId); // Assuming getRouteById is a function to fetch the route
+    const route = await routes.getRouteByRouteId(routeId);
     if (!route) {
       return res.status(404).json({ error: "Route not found" });
     }
@@ -58,22 +58,33 @@ router.patch("/:id", authentication, async (req, res) => {
     }
 
     const updatedRoute = await routes.updateRoute(routeId, name);
-    res.status(201).json(updatedRoute);
+    res.status(200).json(updatedRoute);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authentication, async (req, res) => {
   try {
-    const id = req.params.id;
+    const userId = req.user.id;
+    const routeId = req.params.id;
 
-    if (!id) {
-      return res.status(400).json({ error: "route ID not existed" });
+    if (!routeId) {
+      return res.status(400).json({ error: "Route ID not existed" });
+    }
+    const route = await routes.getRouteByRouteId(routeId);
+    if (!route) {
+      return res.status(404).json({ error: "Route not found" });
     }
 
-    const route = await routes.deleteRoute(id);
-    res.status(201).json(route);
+    if (route.user_id !== userId) {
+      return res
+        .status(403)
+        .json({ error: "Forbidden: You can only update your own routes." });
+    }
+
+    const deletedRoute = await routes.deleteRoute(routeId);
+    res.status(200).json(deletedRoute);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

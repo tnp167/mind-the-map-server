@@ -13,7 +13,13 @@ const createRoute = async (routeData, user_id) => {
     const [insertedRoute] = await knex("routes")
       .insert(routeData)
       .returning("*");
-    return insertedRoute;
+
+    const [updatedRoute] = await knex("routes")
+      .where({ id: insertedRoute.id })
+      .update({ name: `Untitled-${insertedRoute.id}` })
+      .returning("*");
+
+    return updatedRoute;
   } catch (error) {
     throw new Error(`Failed to create route: ${error.message}`);
   }

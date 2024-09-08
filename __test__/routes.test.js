@@ -69,7 +69,7 @@ describe("Routes Table", () => {
       .get("/route/userId")
       .set("Authorization", `Bearer ${authToken}`);
 
-    expect(response.status).toBe(201);
+    expect(response.status).toBe(200);
     expect(response.body).toBeDefined();
     expect(response.body[0].start_point).toBe(testRouteData.start_point);
     expect(response.body[0].end_point).toBe(testRouteData.end_point);
@@ -88,26 +88,29 @@ describe("Routes Table", () => {
       .send(updatedRouteData)
       .set("Authorization", `Bearer ${authToken}`);
 
-    expect(response.status).toBe(201);
+    expect(response.status).toBe(200);
     expect(response.body).toBeDefined();
     expect(response.body.name).toBe(updatedRouteData.name);
+
+    await knex("routes").where({ id: newRoute.id }).del();
   });
 
-  // it("should delete a route by ID", async () => {
-  //   testRouteData.user_id = userId;
+  it("should delete a route by ID", async () => {
+    const newRoute = await routes.createRoute(testRouteData, userId);
 
-  //   const newRoute = await routes.createRoute(testRouteData);
+    const response = await request(app)
+      .delete(`/route/${newRoute.id}`)
+      .set("Authorization", `Bearer ${authToken}`);
 
-  //   const deletionResult = await routes.deleteRoute(newRoute.id);
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+    expect(response.body.message).toContain(
+      `Route with ID ${newRoute.id} deleted successfully.`
+    );
 
-  //   expect(deletionResult.success).toBe(true);
-  //   expect(deletionResult.message).toContain(
-  //     `Route with ID ${newRoute.id} deleted successfully.`
-  //   );
-
-  //   const deletedRoute = await knex("routes")
-  //     .where({ id: newRoute.id })
-  //     .first();
-  //   expect(deletedRoute).toBeUndefined();
-  // });
+    const deletedRoute = await knex("routes")
+      .where({ id: newRoute.id })
+      .first();
+    expect(deletedRoute).toBeUndefined();
+  });
 });
