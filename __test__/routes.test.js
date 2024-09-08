@@ -76,22 +76,22 @@ describe("Routes Table", () => {
     expect(response.body[0].user_id).toBe(testRouteData.user_id);
   });
 
-  // it("should update name of route", async () => {
-  //   testRouteData.user_id = userId;
+  it("should update name of route", async () => {
+    const newRoute = await routes.createRoute(testRouteData, userId);
 
-  //   const newRoute = await routes.createRoute(testRouteData);
+    const updatedRouteData = {
+      name: "testname2",
+    };
 
-  //   const updatedRouteData = {
-  //     name: "testname2",
-  //   };
-  //   const updatedRoute = await routes.updateRoute(
-  //     newRoute.id,
-  //     updatedRouteData.name
-  //   );
+    const response = await request(app)
+      .patch(`/route/${newRoute.id}`)
+      .send(updatedRouteData)
+      .set("Authorization", `Bearer ${authToken}`);
 
-  //   expect(updatedRoute).toBeDefined();
-  //   expect(updatedRoute.name).toBe(updatedRouteData.name);
-  // });
+    expect(response.status).toBe(201);
+    expect(response.body).toBeDefined();
+    expect(response.body.name).toBe(updatedRouteData.name);
+  });
 
   // it("should delete a route by ID", async () => {
   //   testRouteData.user_id = userId;

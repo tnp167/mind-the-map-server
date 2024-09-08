@@ -36,17 +36,29 @@ router.get("/userId", authentication, async (req, res) => {
   }
 });
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", authentication, async (req, res) => {
   try {
-    const id = req.params.id;
-    const { name } = req.body;
+    const userId = req.user.id;
+    const routeId = req.params.id;
 
-    if (!id) {
+    const { name } = req.body;
+    if (!routeId) {
       return res.status(400).json({ error: "route ID not existed" });
     }
 
-    const route = await routes.updateRoute(id, name);
-    res.status(201).json(route);
+    const route = await routes.getRouteByRouteId(routeId); // Assuming getRouteById is a function to fetch the route
+    if (!route) {
+      return res.status(404).json({ error: "Route not found" });
+    }
+
+    if (route.user_id !== userId) {
+      return res
+        .status(403)
+        .json({ error: "Forbidden: You can only update your own routes." });
+    }
+
+    const updatedRoute = await routes.updateRoute(routeId, name);
+    res.status(201).json(updatedRoute);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

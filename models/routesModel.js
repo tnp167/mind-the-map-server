@@ -30,6 +30,14 @@ const getRouteByUserId = async (userId) => {
   }
 };
 
+const getRouteByRouteId = async (routeId) => {
+  try {
+    const route = await knex("routes").where({ id: routeId }).first();
+    return route;
+  } catch (error) {
+    throw new Error(`Route not found for user_id ${userId}`);
+  }
+};
 const updateRoute = async (routeId, name) => {
   try {
     const [updatedRoute] = await knex("routes")
@@ -65,6 +73,7 @@ const deleteRoute = async (routeId) => {
 module.exports = {
   createRoute,
   getRouteByUserId,
+  getRouteByRouteId,
   updateRoute,
   deleteRoute,
 };
