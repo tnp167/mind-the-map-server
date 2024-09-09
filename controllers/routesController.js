@@ -40,8 +40,11 @@ router.patch("/:id", authentication, async (req, res) => {
   try {
     const userId = req.user.id;
     const routeId = req.params.id;
-
     const { name } = req.body;
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
     if (!routeId) {
       return res.status(400).json({ error: "Route ID not existed" });
     }

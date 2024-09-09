@@ -65,6 +65,7 @@ router.post("/login", async (req, res) => {
         last_name: user.last_name,
         picture: user.picture,
         pictureUrl: user.pictureUrl,
+        username: user.username,
       },
       process.env.JWT,
       {
@@ -91,6 +92,9 @@ router.patch("/:id", authentication, async (req, res) => {
   const requestUserId = Number(req.params.id);
   const updatedData = req.body;
 
+  if (!userId || !requestUserId) {
+    return res.status(400).json({ error: "User ID is required" });
+  }
   if (userId !== requestUserId) {
     return res
       .status(403)
@@ -108,6 +112,7 @@ router.patch("/:id", authentication, async (req, res) => {
         last_name: updatedUser.last_name,
         picture: updatedUser.picture,
         pictureUrl: updatedUser.pictureUrl,
+        username: updatedUser.username,
       },
       process.env.JWT,
       { expiresIn: "24h" }
@@ -121,6 +126,10 @@ router.patch("/:id", authentication, async (req, res) => {
 
 router.get("/check-username/:username", async (req, res) => {
   const username = req.params.username;
+  if (!username) {
+    return res.status(400).json({ error: "Username is required" });
+  }
+
   try {
     const available = await users.checkUsername(username);
     res.status(200).json({ available });
@@ -138,6 +147,10 @@ router.patch(
     const requestUserId = Number(req.params.id);
 
     const file = req.file;
+
+    if (!userId || !requestUserId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
 
     if (userId !== requestUserId) {
       return res
@@ -172,6 +185,7 @@ router.patch(
           last_name: updatedUser.last_name,
           picture: pictureName,
           pictureUrl: signedUrl,
+          username: updatedUser.username,
         },
         process.env.JWT,
         { expiresIn: "24h" }

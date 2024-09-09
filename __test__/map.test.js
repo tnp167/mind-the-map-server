@@ -5,7 +5,7 @@ const map = require("../models/mapModel");
 jest.mock("../models/mapModel");
 
 describe("Map API controller", () => {
-  it("should return map data  when valid coordinates are provided", async () => {
+  it("should return location data when valid coordinates are provided", async () => {
     const mapData = {
       type: "FeatureCollection",
       query: [51.530882, 0.0957],

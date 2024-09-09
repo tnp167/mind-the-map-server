@@ -10,8 +10,8 @@ describe("Facilities API controller", () => {
       data: [
         { location_id: 21399866, name: "Krispy Kreme" },
         {
-          location_id: 21399866,
-          name: "Krispy Kreme",
+          location_id: 12065149,
+          name: "Maderla",
         },
       ],
     };

@@ -35,6 +35,7 @@ describe("Routes Table", () => {
         last_name: newUser.last_name,
         picture: newUser.picture,
         pictureUrl: newUser.pictureUrl,
+        username: newUser.username,
       },
       process.env.JWT,
       { expiresIn: "24h" }
