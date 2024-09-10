@@ -1,4 +1,6 @@
-const knex = require("knex")(require("../knexfile").development);
+const knex = require("knex")(
+  require("../knexfile")[process.env.NODE_ENV || "development"]
+);
 
 const createRoute = async (routeData, user_id) => {
   const userExists = await knex("users").where({ id: user_id }).first();
