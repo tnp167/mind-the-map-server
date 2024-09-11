@@ -2,6 +2,13 @@
 
 Mind the Map
 
+## Website
+
+You can explore the full **Mind the Map** experience online by visiting the following link: [Mind the Map](https://www.mind-the-map.london/). To try out all the features without signing up, feel free to use the following credentials:
+
+- **Email**: `johndoe@hotmail.com`
+- **Password**: `aA12345!`
+
 ## Installation
 
 1. Clone the repository of client [Mind the Map](https://github.com/tnp167/mind-the-map) and server [Mind the Map Server](https://github.com/tnp167/mind-the-map-server)
